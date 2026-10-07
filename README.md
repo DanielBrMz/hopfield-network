@@ -8,6 +8,17 @@ Implementación en Python (NumPy) de una red de Hopfield discreta como memoria a
 
 **Autor:** Daniel Alfredo Barreras Meraz (A01254805) · TC3002B.570, Desarrollo de aplicaciones avanzadas de ciencias computacionales · Tec de Monterrey
 
+## Entregas
+
+Cada entrega tiene una etiqueta de git con el estado del repositorio en ese momento:
+
+| Entrega | Fecha | Etiqueta | Qué se agregó |
+|---|---|---|---|
+| Red Hopfield | 30 sep 2026 | [`entrega-1-red-hopfield`](https://github.com/DanielBrMz/hopfield-network/tree/entrega-1-red-hopfield) | Red con regla de Hebb, letras de 7×7, energía, pruebas |
+| Shapes - Hopfield | 7 oct 2026 | [`entrega-2-figuras`](https://github.com/DanielBrMz/hopfield-network/tree/entrega-2-figuras) | Reconocimiento de figuras, regla de proyección, dibujos a mano |
+
+Diferencias entre entregas: [`entrega-1-red-hopfield...entrega-2-figuras`](https://github.com/DanielBrMz/hopfield-network/compare/entrega-1-red-hopfield...entrega-2-figuras)
+
 ## Cómo funciona
 
 | Concepto | Fórmula | Dónde |
