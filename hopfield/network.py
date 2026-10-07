@@ -6,6 +6,7 @@ class HopfieldNetwork:
     """Memoria asociativa: guarda patrones y los recupera a partir de versiones ruidosas.
 
     Aprendizaje hebbiano:  W = (1/N) * sum_p x_p x_p^T,  con diagonal en cero.
+    Regla de proyección:   W = X^T (X X^T)^-1 X  (pseudoinversa), para patrones correlacionados.
     Actualización:         s_i <- sign(sum_j W_ij s_j)
     Energía:               E(s) = -1/2 * s^T W s
     Cada actualización asíncrona no aumenta la energía, así que la red siempre converge a un mínimo local.
@@ -18,14 +19,28 @@ class HopfieldNetwork:
         self.weights = np.zeros((n_neurons, n_neurons))
         self._normalized = self.weights
         self.n_patterns = 0
+        self._stored = np.empty((0, n_neurons))
 
-    def train(self, patterns):
-        """Regla de Hebb. `patterns` es una matriz (p, n) con valores -1/+1."""
+    def train(self, patterns, rule="hebb"):
+        """Guarda patrones (matriz (p, n) con valores -1/+1).
+
+        rule="hebb": suma de productos externos. Funciona bien si los patrones son casi ortogonales.
+        rule="pseudoinverse": proyección sobre el espacio de los patrones. Cada patrón queda como punto fijo
+        aunque se parezcan entre sí (p. ej. figuras que comparten el fondo), mientras sean linealmente
+        independientes. Se recalcula con todos los patrones guardados.
+        """
         patterns = self._check(np.atleast_2d(patterns))
-        for x in patterns:
-            self.weights += np.outer(x, x)
+        self._stored = np.vstack([self._stored, patterns])
+        self.n_patterns = len(self._stored)
+        if rule == "hebb":
+            for x in patterns:
+                self.weights += np.outer(x, x)
+        elif rule == "pseudoinverse":
+            X = self._stored
+            self.weights = self.n * (X.T @ np.linalg.pinv(X @ X.T) @ X)
+        else:
+            raise ValueError("rule debe ser 'hebb' o 'pseudoinverse'")
         np.fill_diagonal(self.weights, 0)
-        self.n_patterns += len(patterns)
         self._normalized = self.weights / self.n
         return self
 
